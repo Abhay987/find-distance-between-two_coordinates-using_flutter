@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
-import 'dart:math';
-class ChangeData extends ChangeNotifier{
-  String location ='Null, Press Button';
-  final Distance distance=Distance();
-  final lat1=28.6445433;
-  final long1=77.3264255;
-  num km=0;
-  num meter=0;
-  bool? isselected=false;
+//import 'package:geocoding/geocoding.dart';
+//import 'dart:math';
+
+class ChangeData extends ChangeNotifier {
+  String location = 'Null, Press Button';
+  final Distance distance = const Distance();
+  final lat1 = 28.6445433;
+  final long1 = 77.3264255;
+  num km = 0;
+  num meter = 0;
+  bool? isselected = false;
   String Address = 'search';
   Future<Position> _getGeoLocationPosition() async {
     bool serviceEnabled;
@@ -44,16 +45,17 @@ class ChangeData extends ChangeNotifier{
     }
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
   }
+
 /*
   Future<void> GetAddressFromLatLong(Position position)async {
     List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
     //print(placemarks);
     Placemark place = placemarks[0];
     Address = '${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}';
-    *//*if(isselected==true){
+    */ /*if(isselected==true){
       km =distance.as(LengthUnit.Kilometer, LatLng(lat1, long1), LatLng(position.latitude, position.longitude));
       //print('Distance in km $km');
       meter=distance(LatLng(lat1, long1),LatLng(lat2, long2));
@@ -64,10 +66,11 @@ class ChangeData extends ChangeNotifier{
       debugPrint("Dont print distance kilometer");
       km=0;
       meter=0;
-    }*//*
+    }*/ /*
   }*/
-      notifyListeners();
+  notifyListeners();
 }
+
 class ProvData extends StatefulWidget {
   const ProvData({Key? key}) : super(key: key);
 
@@ -76,11 +79,12 @@ class ProvData extends StatefulWidget {
 }
 
 class _ProvDataState extends State<ProvData> {
-  ChangeData cd=ChangeData();
+  ChangeData cd = ChangeData();
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context)=>ChangeData(),
-      child:MaterialApp(
+    return ChangeNotifierProvider(
+      create: (context) => ChangeData(),
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           backgroundColor: Colors.white,
@@ -93,56 +97,71 @@ class _ProvDataState extends State<ProvData> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Coordinates Points',style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
-                const SizedBox(height: 10,),
-                Consumer(builder: (context,changeData,_)=>Text(cd.location)),
-                const SizedBox(height: 10,),
+                const Text(
+                  'Coordinates Points',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Consumer(
+                    builder: (context, changeData, _) => Text(cd.location)),
+                const SizedBox(
+                  height: 10,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Work from Home :',style: TextStyle(color: Colors.green,fontSize: 20)),
+                    const Text('Work from Home :',
+                        style: TextStyle(color: Colors.green, fontSize: 20)),
                     Checkbox(
                       /*activeColor: Colors.white,
               checkColor: Colors.blue,*/
                       value: cd.isselected,
-                      onChanged: (valuesecond){
+                      onChanged: (valuesecond) {
                         setState(() {
-                          cd.isselected=valuesecond;
+                          cd.isselected = valuesecond;
                         });
                       },
                     ),
                   ],
                 ),
                 const SizedBox(height: 30),
-                Consumer(builder: (context,changedata,_)=>ElevatedButton(onPressed: ()async{
-                  Position position=await cd._getGeoLocationPosition();
-                  cd.location ='Lat: ${position.latitude} , Long: ${position.longitude}';
-                  if(cd.isselected==false){
-                    cd.meter=cd.distance(LatLng(cd.lat1, cd.long1),LatLng(position.latitude, position.longitude));
-                    if(cd.meter<=50)
-                    {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Container(
-                        child: const Text('Present'),
-                      )));
-                    }
-                    //print('Distance in meter $meter');
-                  }
-                  else
-                  {
-                    debugPrint("Dont print distance kilometer");
-                    cd.km=0;
-                    cd.meter=0;
-                  }
-
-                }, child: const Text('Get Location'),
-                  style: ElevatedButton.styleFrom(
-                    onPrimary: Colors.white,
-                    primary: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                )),
+                Consumer(
+                    builder: (context, changedata, _) => ElevatedButton(
+                          onPressed: () async {
+                            Position position =
+                                await cd._getGeoLocationPosition();
+                            cd.location =
+                                'Lat: ${position.latitude} , Long: ${position.longitude}';
+                            if (cd.isselected == false) {
+                              cd.meter = cd.distance(
+                                  LatLng(cd.lat1, cd.long1),
+                                  LatLng(
+                                      position.latitude, position.longitude));
+                              if (cd.meter <= 50) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                        content: Container(
+                                  child: const Text('Present'),
+                                )));
+                              }
+                              //print('Distance in meter $meter');
+                            } else {
+                              debugPrint("Dont print distance kilometer");
+                              cd.km = 0;
+                              cd.meter = 0;
+                            }
+                          },
+                          child: const Text('Get Location'),
+                          style: ElevatedButton.styleFrom(
+                            onPrimary: Colors.white,
+                            primary: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                        )),
               ],
             ),
           ),
